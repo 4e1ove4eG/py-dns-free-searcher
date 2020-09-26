@@ -2,19 +2,36 @@ import re
 import string
 import subprocess
 from itertools import combinations_with_replacement
+
+
+# TODO: вынести в отдельный модуль и имплементировать класс сохранения и извлечения строки из файла
+class StringPersistence:
+    string = ""
+
+    def get(self):
+        return self.string
+
+    def set(self, value: str):
+        self.string = value
+
+
+# TODO: перененести is_domain_part_valid и domain_list_generator в отдельный модуль генерации имен
+
 def is_domain_part_valid(part):
     return part[0] != '-' and part[-1] != '-'
 
-
-
-def domain_list_generator(domain_name):
+# TODO: добавить функционал востановления с места последней остановки и сохранения текущего состояния
+def domain_list_generator(domain_name: str, string_persistence: StringPersistence = None):
     combinations = combinations_with_replacement(string.ascii_lowercase + '-', 3)
     result = []
     for combination in combinations:
         if is_domain_part_valid(combination):
             result.append(''.join(combination) + "." + domain_name)
+    # TODO: заменить на yield и рассказать про генераторы
     return result
 
+
+# TODO: перененести domain_list_validator и is_free_domain_name в отдельный модуль проверки DNS
 
 def domain_list_validator(domain_list):
     result = []
@@ -37,5 +54,3 @@ if __name__ == "__main__":
     domain_list = domain_list_generator('io')
     free_domains = domain_list_validator(domain_list)
     print(domain_list)
-
-
